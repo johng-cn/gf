@@ -250,3 +250,41 @@ func Test_CheckStruct_With_Inherit(t *testing.T) {
 		t.Assert(err.Maps()["password2"], g.Map{"same": "您两次输入的密码不一致"})
 	})
 }
+
+func Test_CheckStructWithFieldIn(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		type s struct {
+			Name string `v:"in-field"`
+		}
+		ss := &s{
+			Name: "111111",
+		}
+		msg := map[string]interface{}{
+			"Name": "name效验错误",
+		}
+		fieldMsg := map[string][]string{
+			"Name": {"111", "222", "333", "123"},
+		}
+		t.AssertNE(gvalid.CheckStruct(ss, nil, msg, fieldMsg), nil)
+		t.Assert(gvalid.CheckStruct(ss, nil, msg, fieldMsg).String(), "name效验错误")
+	})
+}
+
+func Test_CheckStructWithFieldNotIn(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		type s struct {
+			Name string `v:"not-in-field"`
+		}
+		ss := &s{
+			Name: "123",
+		}
+		msg := map[string]interface{}{
+			"Name": "name效验错误",
+		}
+		fieldMsg := map[string][]string{
+			"Name": {"111", "222", "333", "123"},
+		}
+		t.AssertNE(gvalid.CheckStruct(ss, nil, msg, fieldMsg), nil)
+		t.Assert(gvalid.CheckStruct(ss, nil, msg, fieldMsg).String(), "name效验错误")
+	})
+}

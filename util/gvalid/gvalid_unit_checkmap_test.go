@@ -180,3 +180,42 @@ func Test_Sequence(t *testing.T) {
 		t.Assert(s, "账号不能为空")
 	})
 }
+
+func Test_CheckMapWithInField(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		kvmap := map[string]interface{}{
+			"id": "121",
+		}
+		rules := []string{
+			"id@in-field",
+		}
+		msg := map[string]interface{}{
+			"id": "id效验错误",
+		}
+		fieldMsg := map[string][]string{
+			"id": {"111", "222", "333", "123"},
+		}
+
+		t.AssertNE(gvalid.CheckMap(kvmap, rules, msg, fieldMsg), nil)
+		t.Assert(gvalid.CheckMap(kvmap, rules, msg, fieldMsg).String(), "id效验错误")
+	})
+}
+
+func Test_CheckMapFieldWithNotIn(t *testing.T) {
+	gtest.C(t, func(t *gtest.T) {
+		kvmap := map[string]interface{}{
+			"id": "212",
+		}
+		rules := []string{
+			"id@not-in-field",
+		}
+		msg := map[string]interface{}{
+			"id": "id效验错误",
+		}
+		fieldMsg := map[string][]string{
+			"id": {"111", "222", "333", "123"},
+		}
+		t.Assert(gvalid.CheckMap(kvmap, rules, msg, fieldMsg), nil)
+	})
+
+}
