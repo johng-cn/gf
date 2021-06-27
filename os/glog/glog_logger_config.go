@@ -42,6 +42,8 @@ type Config struct {
 	RotateBackupExpire   time.Duration  `json:"rotateBackupExpire"`   // Max expire for rotated files, which is 0 in default, means no expiration.
 	RotateBackupCompress int            `json:"rotateBackupCompress"` // Compress level for rotated files using gzip algorithm. It's 0 in default, means no compression.
 	RotateCheckInterval  time.Duration  `json:"rotateCheckInterval"`  // Asynchronizely checks the backups and expiration at intervals. It's 1 hour in default.
+	FileColor            bool           `json:"fileColor"`            // Logging level prefix with color or not (false in default).
+	color                logColor       `json:"-"`
 }
 
 // DefaultConfig returns the default configuration for logger.
@@ -251,4 +253,8 @@ func (l *Logger) SetPrefix(prefix string) {
 // SetHandlers sets the logging handlers for current logger.
 func (l *Logger) SetHandlers(handlers ...Handler) {
 	l.config.Handlers = append(handlers, defaultHandler)
+}
+
+func (l *Logger) SetColor(color logColor) {
+	l.config.color = color
 }
