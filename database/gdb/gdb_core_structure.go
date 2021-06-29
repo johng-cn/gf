@@ -71,11 +71,14 @@ func (c *Core) convertFieldValueToLocalValue(fieldValue interface{}, fieldType s
 	case
 		"float",
 		"double",
-		"decimal",
 		"money",
 		"numeric",
 		"smallmoney":
 		return gconv.Float64(gconv.String(fieldValue))
+
+	case
+		"decimal":
+		return gconv.Decimal(gconv.String(fieldValue))
 
 	case "bit":
 		s := gconv.String(fieldValue)
